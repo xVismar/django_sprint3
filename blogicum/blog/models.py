@@ -1,26 +1,38 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import BaseModel
+from datetime import datetime as dt
 
 User = get_user_model()
 
 class Post(BaseModel):
-    title = models.CharField(max_length=256, verbose_name='Название')
-    text = models.TextField(verbose_name='Текст поста')
-    slug = models.SlugField(max_length=64, verbose_name='Слаг')
-    output_order = models.PositiveSmallIntegerField(default=100, verbose_name='Порядок отображения')
-    pub_date = models.DateTimeField(auto_now_add=False, auto_now=True, verbose_name='Дата публикации')
+    title = models.CharField(max_length=256, verbose_name='Заголовок', blank=False)
+    text = models.TextField(verbose_name='Текст', blank=False)
+    slug = models.SlugField(
+        max_length=64,
+        verbose_name='Идентификатор',
+        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.'
+    )
+
+    pub_date = models.DateTimeField(
+        default=dt.now(),
+        auto_now=False,
+        verbose_name='Дата и время публикации',
+        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.'
+    )
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='posts',
-        verbose_name='Автор'
+        verbose_name='Автор публикации'
     )
+
     location = models.ForeignKey(
         'Location',
         on_delete=models.SET_NULL,
         related_name='posts',
-        verbose_name='Место',
+        verbose_name='Местоположение',
         null=True,
         blank=True,
     )
@@ -28,38 +40,36 @@ class Post(BaseModel):
         'Category',
         on_delete=models.SET_NULL,
         related_name='posts',
-        verbose_name='Место',
+        verbose_name='Категория',
         null=True,
-        blank=True,
+        blank=False,
     )
 
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
 
-    def __str__(self):
-        return self.title
-
 
 class Category(BaseModel):
-    title = models.CharField(max_length=256, verbose_name='Название')
-    description = models.TextField(verbose_name='Описание категории')
-    slug = models.SlugField(unique=True, verbose_name='Слаг')
+    title = models.CharField(max_length=256, verbose_name='Заголовок')
+    description = models.TextField(verbose_name='Описание')
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='Идентификатор',
+        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.'
+    )
 
     class Meta:
-        verbose_name = 'тематическая категория'
-        verbose_name_plural = 'Тематичесие категории'
-
-    def __str__(self):
-        return self.title
+        verbose_name = 'категория'
+        verbose_name_plural = 'Категории'
 
 
 class Location(BaseModel):
-    name = models.CharField(max_length=256, verbose_name='Название')
+    name = models.CharField(max_length=256, verbose_name='Название места')
 
     class Meta:
-        verbose_name = 'географическая метка'
-        verbose_name_plural = 'Географические метки'
+        verbose_name = 'местоположение'
+        verbose_name_plural = 'Местоположения'
 
     def __str__(self):
         return self.name
