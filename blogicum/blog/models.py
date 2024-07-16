@@ -1,5 +1,5 @@
-from django.db import models
-from django.contrib.auth import get_user_model
+from django.db import models # noqa
+from django.contrib.auth import get_user_model # noqa
 from core.models import BaseModel
 from datetime import datetime as dt
 
@@ -18,14 +18,14 @@ class Post(BaseModel):
     slug = models.SlugField(
         max_length=64,
         verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.' # noqa
     )
 
     pub_date = models.DateTimeField(
         default=dt.now,
         auto_now=False,
         verbose_name='Дата и время публикации',
-        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.'
+        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.' # noqa
     )
 
     author = models.ForeignKey(
@@ -63,14 +63,14 @@ class Category(BaseModel):
     slug = models.SlugField(
         unique=True,
         verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.' # noqa
     )
 
     pub_date = models.DateTimeField(
         default=dt.now,
         auto_now=False,
         verbose_name='Дата и время публикации',
-        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.'
+        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.' # noqa
     )
 
     class Meta:
