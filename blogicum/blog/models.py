@@ -15,7 +15,7 @@ class Post(BaseModel):
     )
 
     pub_date = models.DateTimeField(
-        default=dt.now(),
+        default=dt.now,
         auto_now=False,
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно делать отложенные публикации.'
@@ -57,6 +57,13 @@ class Category(BaseModel):
         unique=True,
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; разрешены символы латиницы, цифры, дефис и подчёркивание.'
+    )
+
+    pub_date = models.DateTimeField(
+        default=dt.now,
+        auto_now=False,
+        verbose_name='Дата и время публикации',
+        help_text='Если установить дату и время в будущем — можно делать отложенные публикации.'
     )
 
     class Meta:
