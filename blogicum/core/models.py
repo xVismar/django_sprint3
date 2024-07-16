@@ -14,13 +14,10 @@ class BaseModel(models.Model):
         auto_now_add=True,
         verbose_name='Добавлено'
     )
-    
 
     class Meta:
         abstract = True
         verbose_name = 'Базовая модель'
 
-
     def __str__(self):
         return self.title
-        
