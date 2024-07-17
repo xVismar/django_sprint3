@@ -7,16 +7,14 @@ class BaseModel(models.Model):
 
     is_published = models.BooleanField(
         default=True,
-        blank=False,
         verbose_name='Опубликовано',
         help_text='Снимите галочку, чтобы скрыть публикацию.'
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True,
-        blank=False,
         verbose_name='Добавлено',
-        help_text='Время создания записи'
+        help_text='Время создания записи.'
     )
 
     class Meta:
@@ -32,7 +30,6 @@ class TSPdModel(BaseModel):
 
     title = models.CharField(
         max_length=256,
-        blank=False,
         verbose_name='Заголовок'
     )
 
@@ -46,9 +43,8 @@ class TSPdModel(BaseModel):
     )
 
     pub_date = models.DateTimeField(
-        default=timezone.now,
+        default=timezone.now(),
         auto_now=False,
-        blank=False,
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно делать'
         ' отложенные публикации.'

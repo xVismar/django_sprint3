@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Category, Post, Location
+from .models import Category
+from .models import Post
+from .models import Location
 
 admin.site.empty_value_display = 'Не задано'
 

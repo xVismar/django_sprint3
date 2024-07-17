@@ -1,16 +1,17 @@
-from django.db import models # noqa
-from django.contrib.auth import get_user_model # noqa
-from core.models import BaseModel, TSPdModel
+from django.db import models
+from django.contrib.auth import get_user_model
+from core.models import BaseModel
+from core.models import TSPdModel
 from django.template.defaultfilters import truncatewords
 
 User = get_user_model()
 
-# core.models.TSPdModel передаёт:
+# core.models.TSPdModel(BaseModel) передаёт:
 # text
 # slug
 # pub_date
 #
-# Наследуется от BaseModel:
+# Наследует от BaseModel:
 # created_at
 # is_published
 
@@ -20,14 +21,14 @@ class Post(TSPdModel):
     def short_text(self):
         return truncatewords(self.text, 10)
 
-    text = models.TextField(verbose_name='Текст', blank=False)
+    text = models.TextField(verbose_name='Текст')
 
     author = models.ForeignKey(
         User,
-        blank=False,
         on_delete=models.CASCADE,
         related_name='posts',
         verbose_name='Автор публикации'
+
     )
 
     location = models.ForeignKey(
@@ -43,7 +44,6 @@ class Post(TSPdModel):
         'Category',
         on_delete=models.SET_NULL,
         null=True,
-        blank=False,
         related_name='posts',
         verbose_name='Категория'
     )
@@ -55,11 +55,11 @@ class Post(TSPdModel):
 
 
 class Category(TSPdModel):
-    description = models.TextField(blank=False, verbose_name='Описание')
+    description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(
         max_length=64,
-        blank=True,
         unique=True,
+        blank=True,
         verbose_name='Идентификатор',
         help_text='Идентификатор страницы для URL; разрешены символы латиницы,'
         ' цифры, дефис и подчёркивание.'
@@ -74,7 +74,6 @@ class Category(TSPdModel):
 class Location(BaseModel):
     name = models.CharField(
         max_length=256,
-        blank=False,
         verbose_name='Название места'
     )
 
