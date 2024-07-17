@@ -51,4 +51,3 @@ def category_posts(request, category_slug):
 
     else:
         raise 404
-
