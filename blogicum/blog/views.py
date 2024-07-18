@@ -1,53 +1,46 @@
 from django.shortcuts import get_object_or_404, render
-from blog.models import Post
-from blog.models import Category
-from django.db.models import Q
+
 from django.utils import timezone
 
+from blog.models import Post, Category
 
-posts = Post.objects.select_related('category').filter(
+
+DISP_LIMIT = 5
+
+POSTS = Post.objects.all()
+POST_PB = POSTS.filter(is_published=True, pub_date__lte=timezone.now())
+posts_cat = Post.objects.select_related('category').filter(
     is_published=True,
     category__is_published=True,
     pub_date__lte=timezone.now()
 )
 
+CATS = Category.objects.all()
+CAT_PB = CATS.filter(is_published=True, pub_date__lte=timezone.now())
+
 
 def index(request):
     template = 'blog/index.html'
-    context = {'post_list': posts[:5]}
+    context = {'post_list': posts_cat[:DISP_LIMIT]}
     return render(request, template, context)
 
 
 def post_detail(request, id):
-    template = 'blog/detail.html'
-    if Post.is_published and Category.is_published:
-        post = get_object_or_404(Post.objects.filter(
-            is_published=True,
-            category__is_published=True,
-            pub_date__lte=timezone.now(),
-            pk=id
-        ))
-        context = {'post': post}
-        return render(request, template, context)
-    else:
-        raise 404
+    template = 'blog/detail.html',
+    post = get_object_or_404(posts_cat, pk=id)
+    context = {'post': post}
+    return render(request, template, context)
 
 
 def category_posts(request, category_slug):
+    post_list = POST_PB.filter(category__slug=category_slug)
+    category = get_object_or_404(CAT_PB.filter(slug=category_slug))
+
+    context = {
+        'category': category,
+        'post_list': post_list
+    }
+
     template = 'blog/category.html'
 
-    if Category.is_published:
-        post_list = posts.filter(category__slug=category_slug)
-        category_list = get_object_or_404(Category.objects.all().filter(
-            Q(is_published=True)
-            & Q(slug=category_slug))
-        )
-        context = {
-            'category': category_list,
-            'post_list': post_list
-        }
-
-        return render(request, template, context)
-
-    else:
-        raise 404
+    return render(request, template, context)

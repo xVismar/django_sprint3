@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Category
-from .models import Post
-from .models import Location
+
+from .models import Category, Post, Location
 
 admin.site.empty_value_display = 'Не задано'
 
@@ -17,6 +16,28 @@ class CategoryAdmin(admin.ModelAdmin):
     )
     list_display = (
         'title',
+        'is_published'
+    )
+    list_editable = (
+        'is_published',
+    )
+
+
+class LocationInline(admin.StackedInline):
+    model = Post
+    extra = 0
+
+
+class LocationAdmin(admin.ModelAdmin):
+    inlines = (
+        LocationInline,
+    )
+    list_display = (
+        'name',
+        'is_published'
+    )
+    list_editable = (
+        'is_published',
     )
 
 
@@ -49,5 +70,5 @@ class PostAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Location)
+admin.site.register(Location, LocationAdmin)
 admin.site.register(Post, PostAdmin)

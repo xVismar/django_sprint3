@@ -1,25 +1,35 @@
-from django.db import models
 from django.contrib.auth import get_user_model
-from core.models import BaseModel
-from core.models import TSPdModel
+
 from django.template.defaultfilters import truncatewords
+
+from django.db import models
+from core.models import BaseModel, PdModel
+
 
 User = get_user_model()
 
-# core.models.TSPdModel(BaseModel) передаёт:
-# text
-# slug
-# pub_date
-#
-# Наследует от BaseModel:
-# created_at
-# is_published
+
+def get_name(line):
+    if not line == 'name':
+        title = models.CharField(
+            max_length=256,
+            verbose_name='Заголовок'
+        )
+        return title
+
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Название места'
+    )
+    return name
 
 
-class Post(TSPdModel):
-    # Функция - обрезаем текст по 10 слов для дисплея в админке.
+class Post(PdModel):
+
     def short_text(self):
         return truncatewords(self.text, 10)
+
+    title = get_name('title')
 
     text = models.TextField(verbose_name='Текст')
 
@@ -44,6 +54,7 @@ class Post(TSPdModel):
         'Category',
         on_delete=models.SET_NULL,
         null=True,
+        blank=False,
         related_name='posts',
         verbose_name='Категория'
     )
@@ -54,7 +65,8 @@ class Post(TSPdModel):
         ordering = ('-pub_date',)
 
 
-class Category(TSPdModel):
+class Category(PdModel):
+    title = get_name('title')
     description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(
         max_length=64,
@@ -72,10 +84,8 @@ class Category(TSPdModel):
 
 
 class Location(BaseModel):
-    name = models.CharField(
-        max_length=256,
-        verbose_name='Название места'
-    )
+
+    name = get_name('name')
 
     class Meta:
         verbose_name = 'местоположение'

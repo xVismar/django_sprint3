@@ -21,26 +21,9 @@ class BaseModel(models.Model):
         abstract = True
         verbose_name = 'Базовая модель'
 
-    def __str__(self):
-        return self.title
 
-
-class TSPdModel(BaseModel):
-    """TSPd - Title Slug Pub_date абстрактная модель"""
-
-    title = models.CharField(
-        max_length=256,
-        verbose_name='Заголовок'
-    )
-
-    slug = models.SlugField(
-        max_length=64,
-        blank=True,
-        unique=False,
-        verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; разрешены символы латиницы,'
-        ' цифры, дефис и подчёркивание.'
-    )
+class PdModel(BaseModel):
+    """Pub_date абстрактная модель, дополняет BaseModel."""
 
     pub_date = models.DateTimeField(
         default=timezone.now(),
@@ -52,4 +35,7 @@ class TSPdModel(BaseModel):
 
     class Meta:
         abstract = True
-        verbose_name = 'tspd модель'
+        verbose_name = 'pub_date модель'
+
+    def __str__(self):
+        return self.title
