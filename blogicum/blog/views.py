@@ -1,46 +1,42 @@
 from django.shortcuts import get_object_or_404, render
-
 from django.utils import timezone
 
 from blog.models import Post, Category
 
-
 DISP_LIMIT = 5
 
-POSTS = Post.objects.all()
-POST_PB = POSTS.filter(is_published=True, pub_date__lte=timezone.now())
-posts_cat = Post.objects.select_related('category').filter(
+POST_PB = Post.objects.filter(is_published=True)
+CAT_PB = Category.objects.filter(is_published=True)
+
+POST_CAT = Post.objects.select_related('category').filter(
     is_published=True,
-    category__is_published=True,
-    pub_date__lte=timezone.now()
+    category__is_published=True
 )
 
-CATS = Category.objects.all()
-CAT_PB = CATS.filter(is_published=True, pub_date__lte=timezone.now())
+
+def time_check(self):
+    return self.filter(pub_date__lte=timezone.now())
+
+
+posts = time_check(POST_CAT)
 
 
 def index(request):
+    context = {'post_list': posts[:DISP_LIMIT]}
     template = 'blog/index.html'
-    context = {'post_list': posts_cat[:DISP_LIMIT]}
     return render(request, template, context)
 
 
 def post_detail(request, id):
-    template = 'blog/detail.html',
-    post = get_object_or_404(posts_cat, pk=id)
+    post = get_object_or_404(posts, pk=id)
     context = {'post': post}
+    template = 'blog/detail.html'
     return render(request, template, context)
 
 
 def category_posts(request, category_slug):
-    post_list = POST_PB.filter(category__slug=category_slug)
-    category = get_object_or_404(CAT_PB.filter(slug=category_slug))
-
-    context = {
-        'category': category,
-        'post_list': post_list
-    }
-
+    post_list = posts.filter(category__slug=category_slug)
+    cat = get_object_or_404(time_check(CAT_PB), slug=category_slug)
+    context = {'category': cat, 'post_list': post_list}
     template = 'blog/category.html'
-
     return render(request, template, context)

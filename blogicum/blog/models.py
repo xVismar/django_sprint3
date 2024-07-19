@@ -1,42 +1,20 @@
 from django.contrib.auth import get_user_model
-
 from django.template.defaultfilters import truncatewords
-
 from django.db import models
-from core.models import BaseModel, PdModel
+
+from core.models import BaseModel, TPdModel
 
 
 User = get_user_model()
 
 
-def get_name(line):
-    if not line == 'name':
-        title = models.CharField(
-            max_length=256,
-            verbose_name='Заголовок'
-        )
-        return title
-
-    name = models.CharField(
-        max_length=256,
-        verbose_name='Название места'
-    )
-    return name
-
-
-class Post(PdModel):
-
-    def short_text(self):
-        return truncatewords(self.text, 10)
-
-    title = get_name('title')
-
+class Post(TPdModel):
     text = models.TextField(verbose_name='Текст')
 
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='posts',
+        related_name='authors',
         verbose_name='Автор публикации'
 
     )
@@ -46,7 +24,7 @@ class Post(PdModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='posts',
+        related_name='locations',
         verbose_name='Местоположение'
     )
 
@@ -54,8 +32,7 @@ class Post(PdModel):
         'Category',
         on_delete=models.SET_NULL,
         null=True,
-        blank=False,
-        related_name='posts',
+        related_name='categories',
         verbose_name='Категория'
     )
 
@@ -64,9 +41,11 @@ class Post(PdModel):
         verbose_name_plural = 'Публикации'
         ordering = ('-pub_date',)
 
+    def short_text(self):
+        return truncatewords(self.text, 10)
 
-class Category(PdModel):
-    title = get_name('title')
+
+class Category(TPdModel):
     description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(
         max_length=64,
@@ -84,8 +63,10 @@ class Category(PdModel):
 
 
 class Location(BaseModel):
-
-    name = get_name('name')
+    name = models.CharField(
+        max_length=256,
+        verbose_name='Название места'
+    )
 
     class Meta:
         verbose_name = 'местоположение'

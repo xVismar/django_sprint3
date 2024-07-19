@@ -22,12 +22,17 @@ class BaseModel(models.Model):
         verbose_name = 'Базовая модель'
 
 
-class PdModel(BaseModel):
-    """Pub_date абстрактная модель, дополняет BaseModel."""
+class TPdModel(BaseModel):
+    """Title Pub_date абстрактная модель, дополняет BaseModel."""
+
+    title = models.CharField(
+        max_length=256,
+        verbose_name='Заголовок'
+    )
 
     pub_date = models.DateTimeField(
-        default=timezone.now(),
         auto_now=False,
+        default=timezone.now,
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно делать'
         ' отложенные публикации.'
@@ -35,7 +40,7 @@ class PdModel(BaseModel):
 
     class Meta:
         abstract = True
-        verbose_name = 'pub_date модель'
+        verbose_name = 'tpd модель'
 
     def __str__(self):
         return self.title
