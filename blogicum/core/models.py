@@ -32,7 +32,7 @@ class TPdModel(BaseModel):
 
     pub_date = models.DateTimeField(
         auto_now=False,
-        default=timezone.now,
+        default=timezone.now(),
         verbose_name='Дата и время публикации',
         help_text='Если установить дату и время в будущем — можно делать'
         ' отложенные публикации.'
