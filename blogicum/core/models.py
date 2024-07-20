@@ -44,3 +44,7 @@ class TPdModel(BaseModel):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def published(cls):
+        return cls.objects.filter(is_published=True)

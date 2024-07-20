@@ -4,6 +4,7 @@ from django.db import models
 
 from core.models import BaseModel, TPdModel
 
+from .utils import QuerySet
 
 User = get_user_model()
 
@@ -36,6 +37,8 @@ class Post(TPdModel):
         verbose_name='Категория'
     )
 
+    objects = QuerySet.as_manager()
+
     class Meta:
         verbose_name = 'публикация'
         verbose_name_plural = 'Публикации'
@@ -55,6 +58,8 @@ class Category(TPdModel):
         help_text='Идентификатор страницы для URL; разрешены символы латиницы,'
         ' цифры, дефис и подчёркивание.'
     )
+
+    objects = QuerySet.as_manager()
 
     class Meta:
         verbose_name = 'категория'
