@@ -46,5 +46,5 @@ class TPdModel(BaseModel):
         return self.title
 
     @classmethod
-    def published(cls):
-        return cls.objects.filter(is_published=True)
+    def posts(cls):
+        return cls.objects.filter(category__is_published=True).check_time()

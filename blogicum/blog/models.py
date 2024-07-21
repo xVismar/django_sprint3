@@ -4,7 +4,7 @@ from django.db import models
 
 from core.models import BaseModel, TPdModel
 
-from .utils import QuerySet
+from .querysets import PostQuerySet, CategoryQuerySet
 
 User = get_user_model()
 
@@ -37,7 +37,7 @@ class Post(TPdModel):
         verbose_name='Категория'
     )
 
-    objects = QuerySet.as_manager()
+    objects = PostQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'публикация'
@@ -59,7 +59,7 @@ class Category(TPdModel):
         ' цифры, дефис и подчёркивание.'
     )
 
-    objects = QuerySet.as_manager()
+    objects = CategoryQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'категория'

@@ -1,29 +1,27 @@
 from django.shortcuts import get_object_or_404, render
 
-from blog.models import Post, Category
+from blog.models import Category, Post
+
 
 DISP_LIMIT = 5
 
-posts = Post.published().filter(category__is_published=True)
-
 
 def index(request):
-    context = {'post_list': posts.check_time()[:DISP_LIMIT]}
+    context = {'post_list': Post.posts()[:DISP_LIMIT]}
     template = 'blog/index.html'
     return render(request, template, context)
 
 
 def post_detail(request, id):
-    post = get_object_or_404(posts.check_time(), pk=id)
-    context = {'post': post}
+    context = {'post': get_object_or_404(Post.posts(), pk=id)}
     template = 'blog/detail.html'
     return render(request, template, context)
 
 
 def category_posts(request, category_slug):
-    post_list = posts.check_time().filter(category__slug=category_slug)
+    post_list = Post.posts().filter(category__slug=category_slug)
     category = get_object_or_404(
-        Category.published().check_time(),
+        Category.objects.published(),
         slug=category_slug
     )
 
