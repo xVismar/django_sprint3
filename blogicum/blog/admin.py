@@ -5,41 +5,37 @@ from .models import Category, Post, Location
 admin.site.empty_value_display = 'Не задано'
 
 
-class CategoryInline(admin.TabularInline):
+class BaseInline(admin.TabularInline):
     model = Post
     extra = 0
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class BaseAdmin(admin.ModelAdmin):
     inlines = (
-        CategoryInline,
+        BaseInline,
     )
+
+
+class CategoryAdmin(BaseAdmin):
     list_display = (
         'title',
-        'is_published'
+        'is_published',
     )
+
     list_editable = (
         'is_published',
     )
 
 
-class LocationInline(admin.StackedInline):
-    model = Post
-    extra = 0
-
-
-class LocationAdmin(admin.ModelAdmin):
-    inlines = (
-        LocationInline,
-    )
+class LocationAdmin(BaseAdmin):
     list_display = (
         'name',
-        'is_published'
-    )
-    list_editable = (
         'is_published',
     )
 
+    list_editable = (
+        'is_published',
+    )
 
 class PostAdmin(admin.ModelAdmin):
     list_display = (
