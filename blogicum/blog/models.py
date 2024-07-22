@@ -47,6 +47,10 @@ class Post(TPdModel):
     def short_text(self):
         return truncatewords(self.text, 10)
 
+    @classmethod
+    def posts(cls):
+        return cls.objects.filter(category__is_published=True).check_pub_time()
+
 
 class Category(TPdModel):
     description = models.TextField(verbose_name='Описание')
